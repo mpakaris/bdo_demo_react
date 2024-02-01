@@ -9,7 +9,7 @@ import MyToastSuccess from "./MyToastSuccess";
 
 function TaskTable({ tasks, users, onTaskEdited }) {
   const [show, setShow] = useState(false);
-  const [activeTask, setActiveTask] = useState();
+  const [activeTask, setActiveTask] = useState(undefined);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
@@ -51,30 +51,26 @@ function TaskTable({ tasks, users, onTaskEdited }) {
     }
   };
 
-  const handleTitleChange = (e) => {
-    setActiveTask({
-      id: activeTask.id,
-      title: e.target.value,
-      description: activeTask.description,
-      userId: activeTask.userId,
-    });
-  };
+  const handleChange = (e, field) => {
+    if (field === "title") {
+      setActiveTask({
+        ...activeTask,
+        title: e.target.value,
+      });
+    }
 
-  const handleDescriptionChange = (e) => {
-    setActiveTask({
-      id: activeTask.id,
-      title: activeTask.title,
-      description: e.target.value,
-      userId: activeTask.userId,
-    });
+    if (field === "description") {
+      setActiveTask({
+        ...activeTask,
+        description: e.target.value,
+      });
+    }
   };
 
   const handleAssigneeChange = (userName) => {
     const newAssigneeId = users.find((user) => user.name === userName).id;
     setActiveTask({
-      id: activeTask.id,
-      title: activeTask.title,
-      description: activeTask.description,
+      ...activeTask,
       userId: newAssigneeId,
     });
   };
@@ -160,7 +156,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   className="form-control"
                   placeholder="Task Title"
                   value={activeTask.title}
-                  onChange={handleTitleChange}
+                  onChange={(event) => handleChange(event, "title")}
                 />
               </div>
               <div className="col-md- 3 mr-0">
@@ -184,7 +180,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   rows="3"
                   placeholder="Description of Task"
                   value={activeTask.description}
-                  onChange={handleDescriptionChange}
+                  onChange={(event) => handleChange(event, "description")}
                 ></textarea>
               </div>
             </form>

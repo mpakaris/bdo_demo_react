@@ -175,8 +175,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
         </tbody>
       </table>
 
-      {activeUser && JSON.stringify(activeUser)}
-
       {/* Edit Modal */}
       {activeUser && (
         <Modal show={showEditModal} onHide={handleCloseEditModal}>
