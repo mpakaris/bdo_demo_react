@@ -53,7 +53,6 @@ function NewUser({ onUserAdded, setUserMsg }) {
 
     try {
       const res = await UserService.createUser(userDTO);
-      console.log(res);
       if (res) {
         setUserMsg(
           "Congratulations! New User added successfully to the Database."

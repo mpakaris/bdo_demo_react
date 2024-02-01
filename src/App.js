@@ -106,7 +106,7 @@ function App() {
         <UserTable users={users} />
       </div>
       <div className="task-table">
-        <TaskTable tasks={tasks} users={users} />
+        <TaskTable tasks={tasks} users={users} onTaskEdited={fetchTasks} />
       </div>
     </div>
   );
