@@ -62,3 +62,7 @@
   position: relative;
   z-index: 2;
 }
+
+.user-table .task-table {
+  margin: 100px 20px;
+}

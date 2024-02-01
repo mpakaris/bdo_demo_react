@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
+import TaskTable from "./components/TaskTable";
+import UserTable from "./components/UserTable";
 import TaskService from "./services/TaskService";
 import UserService from "./services/UserService";
 
@@ -14,7 +15,6 @@ function App() {
     TaskService.getAllTasks()
       .then((response) => {
         setTasks(response.data);
-        console.log(tasks);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -23,12 +23,12 @@ function App() {
     UserService.getAllUsers()
       .then((response) => {
         setUsers(response.data);
-        console.log(users);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
-  }, [tasks, users]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="App">
@@ -39,17 +39,16 @@ function App() {
           <p>This is a Demo Task Application</p>
           <p>by Nikos Mpakaris</p>
           <div className="btn-selection">
-            <button className="btn btn-primary" onClick={console.log("Hit")}>
-              User Management
-            </button>
-            <button
-              className="btn btn-primary ms-3"
-              onClick={console.log("Hit 2")}
-            >
-              Task Management
-            </button>
+            <button className="btn btn-primary">Add New User</button>
+            <button className="btn btn-primary ms-3">Add New Task</button>
           </div>
         </div>
+      </div>
+      <div className="users-table">
+        <UserTable users={users} />
+      </div>
+      <div className="task-table">
+        <TaskTable tasks={tasks} users={users} />
       </div>
     </div>
   );
