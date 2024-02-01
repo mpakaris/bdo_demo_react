@@ -149,8 +149,8 @@ function TaskTable({ tasks, users, onTaskEdited }) {
             <Modal.Title>Edit Task</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form className="row g-3 m-5">
-              <div className="col-md-9">
+            <form className="row g-3">
+              <div className="col-md-7">
                 <input
                   type="text"
                   className="form-control"
@@ -159,7 +159,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   onChange={(event) => handleChange(event, "title")}
                 />
               </div>
-              <div className="col-md- 3 mr-0">
+              <div className="col-md-3 mr-0">
                 <Dropdown onSelect={handleAssigneeChange}>
                   <Dropdown.Toggle variant="secondary">
                     {activeTask &&

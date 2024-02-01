@@ -39,7 +39,7 @@
 
 .hero-section {
   position: relative;
-  min-height: 30vh; /* Adjust the height as needed */
+  min-height: 25vh; /* Adjust the height as needed */
   background-size: cover;
   background-position: center;
   display: flex;
@@ -47,7 +47,7 @@
   align-items: center;
   text-align: center;
   color: white;
-  padding: 60px 0px 30px;
+  padding: 60px 0px 10px;
 }
 
 .hero-overlay {

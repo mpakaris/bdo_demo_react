@@ -11,11 +11,8 @@ import UserService from "./services/UserService";
 function App() {
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
-
   const [showNewTask, setShowNewTask] = useState(false);
   const [showNewUser, setShowNewUser] = useState(false);
-
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -45,23 +42,16 @@ function App() {
   const handleShowNewTask = () => {
     setShowNewTask(true);
     setShowNewUser(false);
-    handleUserMessage("");
   };
 
   const handleShowNewUser = () => {
     setShowNewUser(true);
     setShowNewTask(false);
-    handleUserMessage("");
   };
 
   const handleNewOptions = () => {
     setShowNewUser(false);
     setShowNewTask(false);
-    handleUserMessage("");
-  };
-
-  const handleUserMessage = (msg) => {
-    setMessage(msg);
   };
 
   return (
@@ -88,19 +78,11 @@ function App() {
               </button>
             )}
           </div>
-          {showNewUser && (
-            <NewUser onUserAdded={fetchUsers} setUserMsg={handleUserMessage} />
-          )}
-          {showNewTask && (
-            <NewTask
-              users={users}
-              onTaskAdded={fetchTasks}
-              setUserMsg={handleUserMessage}
-            />
-          )}
-          <h5 className="mt-3 text-info">{message}</h5>
         </div>
       </div>
+
+      {showNewUser && <NewUser onUserAdded={fetchUsers} />}
+      {showNewTask && <NewTask users={users} onTaskAdded={fetchTasks} />}
 
       <div className="users-table">
         <UserTable
