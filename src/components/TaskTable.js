@@ -1,13 +1,28 @@
 import React, { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Dropdown, Modal } from "react-bootstrap";
 import "../App.css";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
 import TaskService from "../services/TaskService";
+import MyToastError from "./MyToastError";
+import MyToastSuccess from "./MyToastSuccess";
 
 function TaskTable({ tasks, users, onTaskEdited }) {
   const [show, setShow] = useState(false);
-  const [activeTask, setActiveTask] = useState({});
+  const [activeTask, setActiveTask] = useState();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showToastSuccess, setShowToastSuccess] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setActiveTask();
+  };
+
+  const handleShowEditModal = (id) => {
+    setShowEditModal(true);
+    setActiveTask(tasks.find((task) => task.id === id));
+  };
 
   const handleClose = () => {
     setShow(false);
@@ -36,6 +51,57 @@ function TaskTable({ tasks, users, onTaskEdited }) {
     }
   };
 
+  const handleTitleChange = (e) => {
+    setActiveTask({
+      id: activeTask.id,
+      title: e.target.value,
+      description: activeTask.description,
+      userId: activeTask.userId,
+    });
+  };
+
+  const handleDescriptionChange = (e) => {
+    setActiveTask({
+      id: activeTask.id,
+      title: activeTask.title,
+      description: e.target.value,
+      userId: activeTask.userId,
+    });
+  };
+
+  const handleAssigneeChange = (userName) => {
+    const newAssigneeId = users.find((user) => user.name === userName).id;
+    setActiveTask({
+      id: activeTask.id,
+      title: activeTask.title,
+      description: activeTask.description,
+      userId: newAssigneeId,
+    });
+  };
+
+  const submitEditedTask = async () => {
+    const taskDTO = {
+      id: activeTask.id,
+      title: activeTask.title,
+      description: activeTask.description,
+      userId: activeTask.userId,
+    };
+
+    try {
+      const res = await TaskService.updateTask(activeTask.id, taskDTO);
+      if (res.data) {
+        onTaskEdited();
+        setShowEditModal(false);
+        setShowToastSuccess(true);
+        setTimeout(() => setShowToastSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.log(error);
+      setShowToastError(true);
+      setTimeout(() => setShowToastError(false), 3000);
+    }
+  };
+
   return (
     <div
       className="task-table"
@@ -61,7 +127,10 @@ function TaskTable({ tasks, users, onTaskEdited }) {
               <td>{findAssigneeById(task.userId)}</td>
               <td>
                 <div className="btn-selection">
-                  <button className="btn btn-warning">
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleShowEditModal(task.id)}
+                  >
                     <img src={Edit} alt="Edit Task" />
                   </button>
                   <button
@@ -76,6 +145,76 @@ function TaskTable({ tasks, users, onTaskEdited }) {
           ))}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      {activeTask && (
+        <Modal show={showEditModal} onHide={handleCloseEditModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Task</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="row g-3 m-5">
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Task Title"
+                  value={activeTask.title}
+                  onChange={handleTitleChange}
+                />
+              </div>
+              <div className="col-md-3 mr-0">
+                <Dropdown onSelect={handleAssigneeChange}>
+                  <Dropdown.Toggle variant="secondary">
+                    {activeTask &&
+                      users.find((user) => user.id === activeTask.userId).name}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {users.map((user) => (
+                      <Dropdown.Item key={user.id} eventKey={user.name}>
+                        {user.name}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+              <div className="mb-3">
+                <textarea
+                  className="form-control"
+                  rows="3"
+                  placeholder="Description of Task"
+                  value={activeTask.description}
+                  onChange={handleDescriptionChange}
+                ></textarea>
+              </div>
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseEditModal}>
+              Close
+            </Button>
+            <Button variant="warning" onClick={submitEditedTask}>
+              Update Task
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
+      {/* Notification Toast */}
+      <MyToastSuccess
+        show={showToastSuccess}
+        onClose={() => setShowToastSuccess(false)}
+      >
+        Congrats! Task edited successfully!
+      </MyToastSuccess>
+      <MyToastError
+        show={showToastError}
+        onClose={() => setShowToastError(false)}
+      >
+        Error! Task edit failed!
+      </MyToastError>
+
+      {/* Confirmation Modal */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Delete Task</Modal.Title>
