@@ -1,34 +1,59 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Diamond from "./assets/diamond.svg";
+import NewTask from "./components/NewTask";
+import NewUser from "./components/NewUser";
 import TaskTable from "./components/TaskTable";
 import UserTable from "./components/UserTable";
 import TaskService from "./services/TaskService";
 import UserService from "./services/UserService";
 
-// style={{ border: "3px solid red" }}
-
 function App() {
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    TaskService.getAllTasks()
-      .then((response) => {
-        setTasks(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
+  const [showNewTask, setShowNewTask] = useState(false);
+  const [showNewUser, setShowNewUser] = useState(false);
 
-    UserService.getAllUsers()
+  useEffect(() => {
+    fetchUsers();
+    fetchTasks();
+  }, []);
+
+  const fetchUsers = async () => {
+    await UserService.getAllUsers()
       .then((response) => {
         setUsers(response.data);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+
+  const fetchTasks = async () => {
+    await TaskService.getAllTasks()
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  const handleShowNewTask = () => {
+    setShowNewTask(true);
+    setShowNewUser(false);
+  };
+
+  const handleShowNewUser = () => {
+    setShowNewUser(true);
+    setShowNewTask(false);
+  };
+
+  const handleNewOptions = () => {
+    setShowNewUser(false);
+    setShowNewTask(false);
+  };
 
   return (
     <div className="App">
@@ -39,9 +64,23 @@ function App() {
           <p>This is a Demo Task Application</p>
           <p>by Nikos Mpakaris</p>
           <div className="btn-selection">
-            <button className="btn btn-primary">Add New User</button>
-            <button className="btn btn-primary ms-3">Add New Task</button>
+            <button className="btn btn-primary" onClick={handleShowNewUser}>
+              Add New User
+            </button>
+            <button
+              className="btn btn-primary ms-3"
+              onClick={handleShowNewTask}
+            >
+              Add New Task
+            </button>
+            {(showNewTask || showNewUser) && (
+              <button className="btn btn-info ms-3" onClick={handleNewOptions}>
+                <img src={Diamond} alt="Close new Options" />
+              </button>
+            )}
           </div>
+          {showNewUser && <NewUser onUserAdded={fetchUsers} />}
+          {showNewTask && <NewTask users={users} onTaskAdded={fetchTasks} />}
         </div>
       </div>
       <div className="users-table">
