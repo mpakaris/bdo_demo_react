@@ -66,9 +66,11 @@ function App() {
             <button className="btn btn-primary" onClick={handleShowNewUser}>
               Add New User
             </button>
+
             <button
               className="btn btn-primary ms-3"
               onClick={handleShowNewTask}
+              disabled={users.length < 1}
             >
               Add New Task
             </button>
