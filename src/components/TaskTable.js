@@ -163,7 +163,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   onChange={handleTitleChange}
                 />
               </div>
-              <div className="col-md-3 mr-0">
+              <div className="col-md- 3 mr-0">
                 <Dropdown onSelect={handleAssigneeChange}>
                   <Dropdown.Toggle variant="secondary">
                     {activeTask &&
