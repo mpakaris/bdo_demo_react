@@ -77,7 +77,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="text"
               className="form-control"
-              placeholder="Testo Steron"
+              placeholder="Name"
               onChange={handleNameChange}
             />
           </div>
@@ -85,7 +85,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="email"
               className="form-control"
-              placeholder="myName@email.com"
+              placeholder="name@email.com"
               onChange={handleEmailChange}
             />
           </div>
@@ -93,7 +93,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="password"
               className="form-control"
-              placeholder="my password"
+              placeholder="Password"
               onChange={handlePasswordChange}
             />
           </div>
@@ -101,7 +101,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="text"
               className="form-control"
-              placeholder="My street"
+              placeholder="Street"
               onChange={handleStreetNameChange}
             />
           </div>
@@ -109,7 +109,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="number"
               className="form-control"
-              placeholder="house number"
+              placeholder="House"
               onChange={handleHouseNumberChange}
             />
           </div>
@@ -117,7 +117,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
             <input
               type="text"
               className="form-control"
-              placeholder="My city"
+              placeholder="City"
               onChange={handleCityChange}
             />
           </div>
@@ -149,6 +149,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
           </div>
         </form>
       </div>
+
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}

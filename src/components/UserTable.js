@@ -32,8 +32,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
   };
 
   const handleEditChanges = (e, field) => {
-    console.log("Hit here ", field);
-
     if (field === "name") {
       setActiveUser({ ...activeUser, name: e.target.value });
     }
@@ -86,7 +84,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
   };
 
   const deleteUser = async () => {
-    console.log(activeUser);
     try {
       const res = await UserService.deleteUser(activeUser.id);
       if (res.data === "User deleted successfully") {

@@ -48,9 +48,9 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
 
   return (
     <>
-      <div>
+      <div style={{ margin: "30px 18%" }}>
         <form className="row g-3 m-5" onSubmit={formSubmit}>
-          <div className="col-md-9">
+          <div className="col-md-8">
             <input
               type="text"
               className="form-control"
@@ -96,6 +96,7 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
           </div>
         </form>
       </div>
+
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}
