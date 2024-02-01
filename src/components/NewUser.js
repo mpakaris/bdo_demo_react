@@ -67,7 +67,7 @@ function NewUser({ onUserAdded }) {
   };
 
   return (
-    <div>
+    <div style={{ margin: "30px 20%" }}>
       <form className="row g-3 m-5" onSubmit={formSubmit}>
         <div className="col-md-6">
           <input

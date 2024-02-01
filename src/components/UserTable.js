@@ -9,7 +9,11 @@ function UserTable({ users }) {
   return (
     <div
       className="user-table"
-      style={{ border: "3px solid black", marginTop: "30px", padding: "30px" }}
+      style={{
+        border: "3px solid black",
+        margin: "30px 8%",
+        padding: "30px",
+      }}
     >
       <h4 style={{ marginBottom: "40px" }}>Current Active Users</h4>
       <table className="table">
