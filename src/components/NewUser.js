@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import UserService from "../services/UserService";
 
-function NewUser({ onUserAdded }) {
+function NewUser({ onUserAdded, setUserMsg }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,8 +9,6 @@ function NewUser({ onUserAdded }) {
   const [postalCode, setPostalCode] = useState();
   const [streetName, setStreetName] = useState("");
   const [houseNumber, setHouseNumber] = useState();
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -57,11 +55,15 @@ function NewUser({ onUserAdded }) {
       const res = await UserService.createUser(userDTO);
       console.log(res);
       if (res) {
-        setShowSuccess(true);
+        setUserMsg(
+          "Congratulations! New User added successfully to the Database."
+        );
         onUserAdded();
       }
     } catch (error) {
-      setShowError(true);
+      setUserMsg(
+        "Sorry, something went wrong. We could not save the User in the Database. Please try again."
+      );
       console.log(error);
     }
   };
@@ -144,17 +146,6 @@ function NewUser({ onUserAdded }) {
           </button>
         </div>
       </form>
-      {showError && (
-        <p className="text-danger">
-          Sorry, something went wrong. We could not save the User in the
-          Database. Please try again.
-        </p>
-      )}
-      {showSuccess && (
-        <p className="text-success">
-          Congratulations! New User added successfully to the Database.
-        </p>
-      )}
     </div>
   );
 }

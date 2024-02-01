@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import TaskService from "../services/TaskService";
 
-function NewTask({ users, onTaskAdded }) {
+function NewTask({ users, onTaskAdded, setUserMsg }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState("Assign User to Task");
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -33,12 +31,16 @@ function NewTask({ users, onTaskAdded }) {
     try {
       const res = await TaskService.createTask(taskDTO);
       if (res) {
-        setShowSuccess(true);
+        // setShowSuccess(true);
         onTaskAdded();
+        setUserMsg("Congratulations! Task added successfully to the Database.");
       }
     } catch (error) {
-      setShowError(true);
+      // setShowError(true);
       console.log(error);
+      setUserMsg(
+        "Sorry, something went wrong. We could not create the New Task in the Database. Please try again."
+      );
     }
   };
 
@@ -82,23 +84,14 @@ function NewTask({ users, onTaskAdded }) {
           <button
             type="submit"
             className="btn btn-warning text-light"
-            disabled={!title || !description || !assignee}
+            disabled={
+              !title || !description || assignee === "Assign User to Task"
+            }
           >
             Add Task
           </button>
         </div>
       </form>
-      {showError && (
-        <p className="text-danger">
-          Sorry, something went wrong. We could not create the New Task in the
-          Database. Please try again.
-        </p>
-      )}
-      {showSuccess && (
-        <p className="text-success">
-          Congratulations! Task added successfully to the Database.
-        </p>
-      )}
     </div>
   );
 }
