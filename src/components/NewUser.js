@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import UserService from "../services/UserService";
+import MyToastError from "./MyToastError";
+import MyToastSuccess from "./MyToastSuccess";
 
 function NewUser({ onUserAdded, setUserMsg }) {
   const [name, setName] = useState("");
@@ -9,6 +11,8 @@ function NewUser({ onUserAdded, setUserMsg }) {
   const [postalCode, setPostalCode] = useState();
   const [streetName, setStreetName] = useState("");
   const [houseNumber, setHouseNumber] = useState();
+  const [showToastSuccess, setShowToastSuccess] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -54,98 +58,110 @@ function NewUser({ onUserAdded, setUserMsg }) {
     try {
       const res = await UserService.createUser(userDTO);
       if (res) {
-        setUserMsg(
-          "Congratulations! New User added successfully to the Database."
-        );
         onUserAdded();
+        setShowToastSuccess(true);
+        setTimeout(() => setShowToastSuccess(false), 3000);
       }
     } catch (error) {
-      setUserMsg(
-        "Sorry, something went wrong. We could not save the User in the Database. Please try again."
-      );
       console.log(error);
+      setShowToastError(true);
+      setTimeout(() => setShowToastError(false), 3000);
     }
   };
 
   return (
-    <div style={{ margin: "30px 20%" }}>
-      <form className="row g-3 m-5" onSubmit={formSubmit}>
-        <div className="col-md-6">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Testo Steron"
-            onChange={handleNameChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <input
-            type="email"
-            className="form-control"
-            placeholder="myName@email.com"
-            onChange={handleEmailChange}
-          />
-        </div>
-        <div className="col-md-12">
-          <input
-            type="password"
-            className="form-control"
-            placeholder="my password"
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <div className="col-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="My street"
-            onChange={handleStreetNameChange}
-          />
-        </div>
-        <div className="col-4">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="house number"
-            onChange={handleHouseNumberChange}
-          />
-        </div>
-        <div className="col-md-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="My city"
-            onChange={handleCityChange}
-          />
-        </div>
+    <>
+      <div style={{ margin: "30px 20%" }}>
+        <form className="row g-3 m-5" onSubmit={formSubmit}>
+          <div className="col-md-6">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Testo Steron"
+              onChange={handleNameChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <input
+              type="email"
+              className="form-control"
+              placeholder="myName@email.com"
+              onChange={handleEmailChange}
+            />
+          </div>
+          <div className="col-md-12">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="my password"
+              onChange={handlePasswordChange}
+            />
+          </div>
+          <div className="col-8">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="My street"
+              onChange={handleStreetNameChange}
+            />
+          </div>
+          <div className="col-4">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="house number"
+              onChange={handleHouseNumberChange}
+            />
+          </div>
+          <div className="col-md-8">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="My city"
+              onChange={handleCityChange}
+            />
+          </div>
 
-        <div className="col-md-4">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Zip Code"
-            onChange={handlePostalCodeChange}
-          />
-        </div>
-        <div className="col-12">
-          <button
-            type="submit"
-            className="btn btn-warning text-light"
-            disabled={
-              !name ||
-              !email ||
-              !password ||
-              !city ||
-              !streetName ||
-              !postalCode ||
-              !houseNumber
-            }
-          >
-            Add User
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="col-md-4">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Zip Code"
+              onChange={handlePostalCodeChange}
+            />
+          </div>
+          <div className="col-12">
+            <button
+              type="submit"
+              className="btn btn-warning text-light"
+              disabled={
+                !name ||
+                !email ||
+                !password ||
+                !city ||
+                !streetName ||
+                !postalCode ||
+                !houseNumber
+              }
+            >
+              Add User
+            </button>
+          </div>
+        </form>
+      </div>
+      <MyToastSuccess
+        show={showToastSuccess}
+        onClose={() => setShowToastSuccess(false)}
+      >
+        Congrats! User added successfully!
+      </MyToastSuccess>
+      <MyToastError
+        show={showToastError}
+        onClose={() => setShowToastError(false)}
+      >
+        Error! Task failed!
+      </MyToastError>
+    </>
   );
 }
 

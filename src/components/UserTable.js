@@ -1,11 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
-// import TaskService from "./services/TaskService";
-// import UserService from "./services/UserService";
+import UserService from "../services/UserService";
+
 import "../App.css";
 
-function UserTable({ users }) {
+function UserTable({ users, onUserEdited, onUserDeleted }) {
+  const [show, setShow] = useState(false);
+  const [activeUser, setActiveUser] = useState({});
+
+  const handleClose = () => {
+    setShow(false);
+    setActiveUser();
+  };
+
+  const handleShow = (id) => {
+    setShow(true);
+    setActiveUser(users.find((user) => user.id === id));
+  };
+
+  const deleteUser = async () => {
+    console.log(activeUser);
+    try {
+      const res = await UserService.deleteUser(activeUser.id);
+      if (res.data === "User deleted successfully") {
+        setShow(false);
+        // Fetch All Users;
+        onUserEdited();
+        // Fetch All Tasks --> Tasks deleted if assigned to deleted User
+        onUserDeleted();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className="user-table"
@@ -46,8 +76,13 @@ function UserTable({ users }) {
                   <button className="btn btn-warning">
                     <img src={Edit} alt="Edit Task" />
                   </button>
-                  <button className="btn btn-danger ms-3">
-                    <img src={Delete} alt="Edit Task" />
+                  <button
+                    className="btn btn-danger ms-3"
+                    onClick={() => {
+                      handleShow(user.id);
+                    }}
+                  >
+                    <img src={Delete} alt="Delete Task" />
                   </button>
                 </div>
               </td>
@@ -55,6 +90,20 @@ function UserTable({ users }) {
           ))}
         </tbody>
       </table>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this User?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteUser}>
+            Delete User
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

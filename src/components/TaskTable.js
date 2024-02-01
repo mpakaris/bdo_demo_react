@@ -25,7 +25,6 @@ function TaskTable({ tasks, users, onTaskEdited }) {
   };
 
   const deleteTask = async () => {
-    console.log(activeTask);
     try {
       const res = await TaskService.deleteTask(activeTask.id);
       if (res.data === "Task deleted successfully") {
@@ -81,10 +80,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
         <Modal.Header closeButton>
           <Modal.Title>Delete Task</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete this task?
-          {activeTask.name}
-        </Modal.Body>
+        <Modal.Body>Are you sure you want to delete this task?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
