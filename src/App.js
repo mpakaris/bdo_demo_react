@@ -86,16 +86,25 @@ function App() {
       {showNewUser && <NewUser onUserAdded={fetchUsers} />}
       {showNewTask && <NewTask users={users} onTaskAdded={fetchTasks} />}
 
-      <div className="users-table">
-        <UserTable
-          users={users}
-          onUserEdited={fetchUsers}
-          onUserDeleted={fetchTasks}
-        />
-      </div>
-      <div className="task-table">
-        <TaskTable tasks={tasks} users={users} onTaskEdited={fetchTasks} />
-      </div>
+      {users.length > 0 && (
+        <div className="users-table">
+          <UserTable
+            users={users}
+            onUserEdited={fetchUsers}
+            onUserDeleted={fetchTasks}
+          />
+        </div>
+      )}
+      {tasks.length > 0 && (
+        <div className="task-table">
+          <TaskTable
+            tasks={tasks}
+            users={users}
+            onTaskEdited={fetchTasks}
+            onUserEdited={fetchUsers}
+          />
+        </div>
+      )}
     </div>
   );
 }

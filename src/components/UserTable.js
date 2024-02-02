@@ -61,7 +61,7 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
     if (field === "streetName") {
       setActiveUser({
         ...activeUser,
-        address: { ...activeUser.address, streetName: e.target.value },
+        address: { ...activeUser.address, street: e.target.value },
       });
     }
 
@@ -86,15 +86,20 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
   const deleteUser = async () => {
     try {
       const res = await UserService.deleteUser(activeUser.id);
-      if (res.data === "User deleted successfully") {
+      if (res.status === 204) {
         setShow(false);
         // Fetch All Users;
         onUserEdited();
         // Fetch All Tasks --> Tasks deleted if assigned to deleted User
         onUserDeleted();
+        setShowEditModal(false);
+        setShowToastSuccess(true);
+        setTimeout(() => setShowToastSuccess(false), 3000);
       }
     } catch (error) {
       console.log(error);
+      setShowToastError(true);
+      setTimeout(() => setShowToastError(false), 3000);
     }
   };
 
@@ -123,18 +128,21 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
         padding: "30px",
       }}
     >
-      <h4 style={{ marginBottom: "40px" }}>Current Active Users</h4>
+      <h4 style={{ marginBottom: "40px" }}>
+        Current Active Users: {users.length}
+      </h4>
       <table className="table">
         <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
             {/* <th scope="col">E-mail</th> */}
-            <th scope="col">Password</th>
+            <th scope="col">E-mail</th>
             <th scope="col">Zip Code</th>
             <th scope="col">City</th>
             <th scope="col">Street</th>
             <th scope="col">HouseNumber</th>
+            <th scope="col">Assigned Tasks</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -147,8 +155,9 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
               {/* <td>{user.password}</td> */}
               <td>{user.address.postalCode}</td>
               <td>{user.address.city}</td>
-              <td>{user.address.streetName}</td>
+              <td>{user.address.street}</td>
               <td>{user.address.houseNumber}</td>
+              <td>{user.tasks.length}</td>
               <td>
                 <div className="btn-selection">
                   <button
@@ -219,7 +228,7 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
                   placeholder="My street"
                   value={
                     activeUser && activeUser.address
-                      ? activeUser.address.streetName
+                      ? activeUser.address.street
                       : ""
                   }
                   onChange={(event) => {

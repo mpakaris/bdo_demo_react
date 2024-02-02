@@ -4,8 +4,8 @@ const API_URL = "http://localhost:8080/api/tasks";
 
 const TaskService = {
   // Create a new task
-  createTask: function (taskData) {
-    return axios.post(API_URL, taskData);
+  createTask: function (userId, taskData) {
+    return axios.post(API_URL + "/" + userId, taskData);
   },
 
   // Retrieve all tasks

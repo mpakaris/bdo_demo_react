@@ -7,7 +7,7 @@ import TaskService from "../services/TaskService";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
 
-function TaskTable({ tasks, users, onTaskEdited }) {
+function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
   const [show, setShow] = useState(false);
   const [activeTask, setActiveTask] = useState(undefined);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -42,12 +42,18 @@ function TaskTable({ tasks, users, onTaskEdited }) {
   const deleteTask = async () => {
     try {
       const res = await TaskService.deleteTask(activeTask.id);
-      if (res.data === "Task deleted successfully") {
+      if (res.status === 204) {
         setShow(false);
         onTaskEdited();
+        onUserEdited();
+        setShowEditModal(false);
+        setShowToastSuccess(true);
+        setTimeout(() => setShowToastSuccess(false), 3000);
       }
     } catch (error) {
       console.log(error);
+      setShowToastError(true);
+      setTimeout(() => setShowToastError(false), 3000);
     }
   };
 
@@ -55,14 +61,14 @@ function TaskTable({ tasks, users, onTaskEdited }) {
     if (field === "title") {
       setActiveTask({
         ...activeTask,
-        title: e.target.value,
+        taskTitle: e.target.value,
       });
     }
 
     if (field === "description") {
       setActiveTask({
         ...activeTask,
-        description: e.target.value,
+        taskDescription: e.target.value,
       });
     }
   };
@@ -78,15 +84,16 @@ function TaskTable({ tasks, users, onTaskEdited }) {
   const submitEditedTask = async () => {
     const taskDTO = {
       id: activeTask.id,
-      title: activeTask.title,
-      description: activeTask.description,
-      userId: activeTask.userId,
+      taskTitle: activeTask.taskTitle,
+      taskDescription: activeTask.taskDescription,
+      user: users.find((user) => user.id === activeTask.userId),
     };
 
     try {
       const res = await TaskService.updateTask(activeTask.id, taskDTO);
       if (res.data) {
         onTaskEdited();
+        onUserEdited();
         setShowEditModal(false);
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);
@@ -103,7 +110,9 @@ function TaskTable({ tasks, users, onTaskEdited }) {
       className="task-table"
       style={{ border: "3px solid black", margin: "30px 8%", padding: "30px" }}
     >
-      <h4 style={{ marginBottom: "40px" }}>Current Active Tasks</h4>
+      <h4 style={{ marginBottom: "40px" }}>
+        Current Active Tasks: {tasks.length}
+      </h4>
       <table className="table">
         <thead>
           <tr>
@@ -118,9 +127,9 @@ function TaskTable({ tasks, users, onTaskEdited }) {
           {tasks.map((task) => (
             <tr key={task.id}>
               <th scope="row">{task.id}</th>
-              <td>{task.title}</td>
-              <td>{task.description}</td>
-              <td>{findAssigneeById(task.userId)}</td>
+              <td>{task.taskTitle}</td>
+              <td>{task.taskDescription}</td>
+              <td>{findAssigneeById(task.user.id)}</td>
               <td>
                 <div className="btn-selection">
                   <button
@@ -155,7 +164,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   type="text"
                   className="form-control"
                   placeholder="Task Title"
-                  value={activeTask.title}
+                  value={activeTask.taskTitle}
                   onChange={(event) => handleChange(event, "title")}
                 />
               </div>
@@ -163,7 +172,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                 <Dropdown onSelect={handleAssigneeChange}>
                   <Dropdown.Toggle variant="secondary">
                     {activeTask &&
-                      users.find((user) => user.id === activeTask.userId).name}
+                      users.find((user) => user.id === activeTask.user.id).name}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {users.map((user) => (
@@ -179,7 +188,7 @@ function TaskTable({ tasks, users, onTaskEdited }) {
                   className="form-control"
                   rows="3"
                   placeholder="Description of Task"
-                  value={activeTask.description}
+                  value={activeTask.taskDescription}
                   onChange={(event) => handleChange(event, "description")}
                 ></textarea>
               </div>

@@ -27,13 +27,12 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
     const user = users.find((user) => user.name === assignee);
 
     const taskDTO = {
-      title: title,
-      description: description,
-      userId: user.id,
+      taskTitle: title,
+      taskDescription: description,
     };
 
     try {
-      const res = await TaskService.createTask(taskDTO);
+      const res = await TaskService.createTask(user.id, taskDTO);
       if (res) {
         onTaskAdded();
         setShowToastSuccess(true);

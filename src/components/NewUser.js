@@ -50,7 +50,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
       address: {
         city: city,
         postalCode: postalCode,
-        streetName: streetName,
+        street: streetName,
         houseNumber: houseNumber,
       },
     };
