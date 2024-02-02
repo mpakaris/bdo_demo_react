@@ -14,7 +14,7 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
       city: "",
       houseNumber: undefined,
       postalCode: undefined,
-      streetName: "",
+      street: "",
     },
   });
   const [showEditModal, setShowEditModal] = useState(false);
@@ -38,10 +38,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
 
     if (field === "email") {
       setActiveUser({ ...activeUser, email: e.target.value });
-    }
-
-    if (field === "password") {
-      setActiveUser({ ...activeUser, password: e.target.value });
     }
 
     if (field === "city") {
@@ -211,16 +207,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
                   }}
                 />
               </div>
-              <div className="col-md-12">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Password"
-                  onChange={(event) => {
-                    handleEditChanges(event, "password");
-                  }}
-                />
-              </div>
               <div className="col-8">
                 <input
                   type="text"
@@ -238,6 +224,8 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
               </div>
               <div className="col-4">
                 <input
+                  min={0}
+                  max={1000}
                   type="number"
                   className="form-control"
                   placeholder="Number"
@@ -269,6 +257,8 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
 
               <div className="col-md-4">
                 <input
+                  min={1000}
+                  max={9999}
                   type="number"
                   className="form-control"
                   placeholder="Zip Code"

@@ -77,7 +77,7 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
     const newAssigneeId = users.find((user) => user.name === userName).id;
     setActiveTask({
       ...activeTask,
-      userId: newAssigneeId,
+      user: { id: newAssigneeId },
     });
   };
 
@@ -86,7 +86,7 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
       id: activeTask.id,
       taskTitle: activeTask.taskTitle,
       taskDescription: activeTask.taskDescription,
-      user: users.find((user) => user.id === activeTask.userId),
+      user: { id: activeTask.user.id },
     };
 
     try {
@@ -171,8 +171,7 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
               <div className="col-md-3 mr-0">
                 <Dropdown onSelect={handleAssigneeChange}>
                   <Dropdown.Toggle variant="secondary">
-                    {activeTask &&
-                      users.find((user) => user.id === activeTask.user.id).name}
+                    {users.find((user) => user.id === activeTask.user.id).name}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {users.map((user) => (

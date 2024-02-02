@@ -8,9 +8,9 @@ function NewUser({ onUserAdded, setUserMsg }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
-  const [postalCode, setPostalCode] = useState();
+  const [postalCode, setPostalCode] = useState(1000);
   const [streetName, setStreetName] = useState("");
-  const [houseNumber, setHouseNumber] = useState();
+  const [houseNumber, setHouseNumber] = useState(1);
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
 
@@ -46,7 +46,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
     const userDTO = {
       name: name,
       email: email,
-      password: password,
+      passwordHash: password,
       address: {
         city: city,
         postalCode: postalCode,
@@ -107,6 +107,8 @@ function NewUser({ onUserAdded, setUserMsg }) {
           </div>
           <div className="col-4">
             <input
+              min={0}
+              max={100}
               type="number"
               className="form-control"
               placeholder="House"
@@ -124,6 +126,8 @@ function NewUser({ onUserAdded, setUserMsg }) {
 
           <div className="col-md-4">
             <input
+              min={1000}
+              max={9999}
               type="number"
               className="form-control"
               placeholder="Zip Code"

@@ -17,6 +17,7 @@ function App() {
   useEffect(() => {
     fetchUsers();
     fetchTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchUsers = async () => {
@@ -27,6 +28,7 @@ function App() {
       .catch((error) => {
         console.error("There was an error!", error);
       });
+    handleNewOptions();
   };
 
   const fetchTasks = async () => {
@@ -37,6 +39,7 @@ function App() {
       .catch((error) => {
         console.error("There was an error!", error);
       });
+    handleNewOptions();
   };
 
   const handleShowNewTask = () => {
