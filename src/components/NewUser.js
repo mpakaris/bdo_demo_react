@@ -57,7 +57,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
 
     try {
       const res = await UserService.createUser(userDTO);
-      if (res) {
+      if (res.status === 200) {
         onUserAdded();
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);
