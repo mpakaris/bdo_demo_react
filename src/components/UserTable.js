@@ -3,9 +3,11 @@ import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
+import View from "../assets/view.svg";
 import UserService from "../services/UserService";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
+import ViewUserDetails from "./ViewUserDetail";
 
 function UserTable({ users, onUserEdited, onUserDeleted }) {
   const [show, setShow] = useState(false);
@@ -20,6 +22,7 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
@@ -29,6 +32,16 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
   const handleShowEditModal = (id) => {
     setShowEditModal(true);
     setActiveUser(users.find((task) => task.id === id));
+  };
+
+  const handleViewModal = async (id) => {
+    if (!showViewModal) {
+      const res = await UserService.getUserById(id);
+      if (res) {
+        setActiveUser(res.data);
+      }
+    }
+    setShowViewModal(!showViewModal);
   };
 
   const handleEditChanges = (e, field) => {
@@ -157,7 +170,13 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
               <td>
                 <div className="btn-selection">
                   <button
-                    className="btn btn-warning"
+                    className="btn btn-info"
+                    onClick={() => handleViewModal(user.id)}
+                  >
+                    <img src={View} alt="View Task" />
+                  </button>
+                  <button
+                    className="btn btn-warning ms-3"
                     onClick={() => handleShowEditModal(user.id)}
                   >
                     <img src={Edit} alt="Edit Task" />
@@ -176,6 +195,13 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
           ))}
         </tbody>
       </table>
+
+      {/* User View Modal */}
+      <ViewUserDetails
+        showViewModal={showViewModal}
+        handleViewModal={handleViewModal}
+        activeUser={activeUser}
+      />
 
       {/* Edit Modal */}
       {activeUser && (

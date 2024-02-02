@@ -3,14 +3,17 @@ import { Button, Dropdown, Modal } from "react-bootstrap";
 import "../App.css";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
+import View from "../assets/view.svg";
 import TaskService from "../services/TaskService";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
+import ViewTaskDetails from "./ViewTaskDetail";
 
 function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
   const [show, setShow] = useState(false);
   const [activeTask, setActiveTask] = useState(undefined);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
 
@@ -32,6 +35,16 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
   const handleShow = (id) => {
     setShow(true);
     setActiveTask(tasks.find((task) => task.id === id));
+  };
+
+  const handleViewModal = async (id) => {
+    if (!showViewModal) {
+      const res = await TaskService.getTaskById(id);
+      if (res) {
+        setActiveTask(res.data);
+      }
+    }
+    setShowViewModal(!showViewModal);
   };
 
   const findAssigneeById = (id) => {
@@ -133,7 +146,13 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
               <td>
                 <div className="btn-selection">
                   <button
-                    className="btn btn-warning"
+                    className="btn btn-info"
+                    onClick={() => handleViewModal(task.id)}
+                  >
+                    <img src={View} alt="View Task" />
+                  </button>
+                  <button
+                    className="btn btn-warning ms-3"
                     onClick={() => handleShowEditModal(task.id)}
                   >
                     <img src={Edit} alt="Edit Task" />
@@ -150,6 +169,13 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
           ))}
         </tbody>
       </table>
+
+      {/* Task View Modal */}
+      <ViewTaskDetails
+        showViewModal={showViewModal}
+        handleViewModal={handleViewModal}
+        activeTask={activeTask}
+      />
 
       {/* Edit Modal */}
       {activeTask && (
