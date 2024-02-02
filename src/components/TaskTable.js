@@ -131,7 +131,9 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Title</th>
-            <th scope="col">Description</th>
+            <th scope="col" className="w-50">
+              Description
+            </th>
             <th scope="col">Assignee</th>
             <th scope="col">Actions</th>
           </tr>
