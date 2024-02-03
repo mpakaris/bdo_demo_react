@@ -145,7 +145,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            {/* <th scope="col">E-mail</th> */}
             <th scope="col">E-mail</th>
             <th scope="col">Zip Code</th>
             <th scope="col">City</th>
@@ -161,7 +160,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
               <th scope="row">{user.id}</th>
               <td>{user.name}</td>
               <td>{user.email}</td>
-              {/* <td>{user.password}</td> */}
               <td>{user.address.postalCode}</td>
               <td>{user.address.city}</td>
               <td>{user.address.street}</td>
