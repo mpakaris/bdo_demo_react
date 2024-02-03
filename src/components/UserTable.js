@@ -316,13 +316,13 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}
       >
-        Congrats! Task edited successfully!
+        Congrats! Everything went just fine!
       </MyToastSuccess>
       <MyToastError
         show={showToastError}
         onClose={() => setShowToastError(false)}
       >
-        Error! Task edit failed!
+        Error! Something went terribly wrong!
       </MyToastError>
 
       {/* Confirmation Modal */}
