@@ -3,7 +3,7 @@ import UserService from "../services/UserService";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
 
-function NewUser({ onUserAdded, setUserMsg }) {
+function NewUser({ onUserAdded }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,7 +57,7 @@ function NewUser({ onUserAdded, setUserMsg }) {
 
     try {
       const res = await UserService.createUser(userDTO);
-      if (res.status === 200) {
+      if (res.status === 201) {
         onUserAdded();
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);

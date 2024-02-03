@@ -87,7 +87,15 @@ function App() {
       </div>
 
       {showNewUser && <NewUser onUserAdded={fetchUsers} />}
-      {showNewTask && <NewTask users={users} onTaskAdded={fetchTasks} />}
+      {showNewTask && (
+        <NewTask
+          users={users}
+          onTaskAdded={() => {
+            fetchUsers();
+            fetchTasks();
+          }}
+        />
+      )}
 
       {users.length > 0 && (
         <div className="users-table">

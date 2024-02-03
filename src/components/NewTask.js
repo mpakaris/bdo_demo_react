@@ -33,7 +33,7 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
 
     try {
       const res = await TaskService.createTask(user.id, taskDTO);
-      if (res.status === 200) {
+      if (res.status === 201) {
         onTaskAdded();
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);
