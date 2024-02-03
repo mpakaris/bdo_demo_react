@@ -20,7 +20,6 @@ const TaskService = {
 
   // Update a task
   updateTask: function (taskId, taskData) {
-    console.log(taskId, taskData);
     return axios.put(API_URL + "/" + taskId, taskData);
   },
 
