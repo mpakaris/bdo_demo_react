@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Button, Dropdown, Modal } from "react-bootstrap";
 import "../App.css";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
 import View from "../assets/view.svg";
 import TaskService from "../services/TaskService";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import EditTaskModal from "./EditTaskModal";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
 import ViewTaskDetails from "./ViewTaskDetail";
@@ -179,59 +180,6 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
         activeTask={activeTask}
       />
 
-      {/* Edit Modal */}
-      {activeTask && (
-        <Modal show={showEditModal} onHide={handleCloseEditModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Edit Task</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="row g-3">
-              <div className="col-md-7">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Task Title"
-                  value={activeTask.taskTitle}
-                  onChange={(event) => handleChange(event, "title")}
-                />
-              </div>
-              <div className="col-md-3 mr-0">
-                <Dropdown onSelect={handleAssigneeChange}>
-                  <Dropdown.Toggle variant="secondary">
-                    {users.find((user) => user.id === activeTask.user.id).name}
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    {users.map((user) => (
-                      <Dropdown.Item key={user.id} eventKey={user.name}>
-                        {user.name}
-                      </Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-              <div className="mb-3">
-                <textarea
-                  className="form-control"
-                  rows="3"
-                  placeholder="Description of Task"
-                  value={activeTask.taskDescription}
-                  onChange={(event) => handleChange(event, "description")}
-                ></textarea>
-              </div>
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseEditModal}>
-              Close
-            </Button>
-            <Button variant="warning" onClick={submitEditedTask}>
-              Update Task
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-
       {/* Notification Toast */}
       <MyToastSuccess
         show={showToastSuccess}
@@ -246,21 +194,25 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
         Error! Task edit failed!
       </MyToastError>
 
-      {/* Confirmation Modal */}
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Task</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this task?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={deleteTask}>
-            Delete Task
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Edit Task Modal */}
+      {activeTask && (
+        <EditTaskModal
+          show={showEditModal}
+          handleClose={handleCloseEditModal}
+          task={activeTask}
+          users={users}
+          handleChange={handleChange}
+          handleAssigneeChange={handleAssigneeChange}
+          submit={submitEditedTask}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        show={show}
+        handleClose={handleClose}
+        handleDelete={deleteTask}
+      />
     </div>
   );
 }

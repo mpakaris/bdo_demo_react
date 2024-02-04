@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 import Delete from "../assets/delete.svg";
 import Edit from "../assets/edit.svg";
 import View from "../assets/view.svg";
 import UserService from "../services/UserService";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import EditUserModal from "./EditUserModal";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
 import ViewUserDetails from "./ViewUserDetail";
@@ -201,113 +202,23 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
         activeUser={activeUser}
       />
 
-      {/* Edit Modal */}
+      {/* Edit User Modal */}
       {activeUser && (
-        <Modal show={showEditModal} onHide={handleCloseEditModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Edit Task</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="row g-3 m-0">
-              <div className="col-md-6">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Testo Steron"
-                  value={activeUser.name}
-                  onChange={(event) => {
-                    handleEditChanges(event, "name");
-                  }}
-                />
-              </div>
-              <div className="col-md-6">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="myName@email.com"
-                  value={activeUser.email}
-                  onChange={(event) => {
-                    handleEditChanges(event, "email");
-                  }}
-                />
-              </div>
-              <div className="col-8">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="My street"
-                  value={
-                    activeUser && activeUser.address
-                      ? activeUser.address.street
-                      : ""
-                  }
-                  onChange={(event) => {
-                    handleEditChanges(event, "streetName");
-                  }}
-                />
-              </div>
-              <div className="col-4">
-                <input
-                  min={0}
-                  max={1000}
-                  type="number"
-                  className="form-control"
-                  placeholder="Number"
-                  value={
-                    activeUser && activeUser.address
-                      ? activeUser.address.houseNumber
-                      : undefined
-                  }
-                  onChange={(event) => {
-                    handleEditChanges(event, "houseNumber");
-                  }}
-                />
-              </div>
-              <div className="col-md-8">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="City"
-                  value={
-                    activeUser && activeUser.address
-                      ? activeUser.address.city
-                      : ""
-                  }
-                  onChange={(event) => {
-                    handleEditChanges(event, "city");
-                  }}
-                />
-              </div>
-
-              <div className="col-md-4">
-                <input
-                  min={1000}
-                  max={9999}
-                  type="number"
-                  className="form-control"
-                  placeholder="Zip Code"
-                  value={
-                    activeUser && activeUser.address
-                      ? activeUser.address.postalCode
-                      : undefined
-                  }
-                  onChange={(event) => {
-                    handleEditChanges(event, "postalCode");
-                  }}
-                />
-              </div>
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseEditModal}>
-              Close
-            </Button>
-            <Button variant="warning" onClick={submitEditedUser}>
-              Update User
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <EditUserModal
+          show={showEditModal}
+          handleClose={handleCloseEditModal}
+          user={activeUser}
+          handleEditChanges={handleEditChanges}
+          submitEditedUser={submitEditedUser}
+        />
       )}
+
+      {/* Delete User Confirmation Modal */}
+      <DeleteConfirmationModal
+        show={show}
+        handleClose={handleClose}
+        handleDelete={deleteUser}
+      />
 
       {/* Notification Toast */}
       <MyToastSuccess
@@ -322,22 +233,6 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
       >
         Error! Something went terribly wrong!
       </MyToastError>
-
-      {/* Confirmation Modal */}
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this User?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={deleteUser}>
-            Delete User
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }
