@@ -3,7 +3,6 @@ import { Button, Dropdown, Modal } from "react-bootstrap";
 import TaskService from "../services/TaskService";
 
 const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
-  // Initialize editedTask with default values to avoid undefined access
   const [editedTask, setEditedTask] = useState({
     id: task?.id || "",
     taskTitle: "",
@@ -11,7 +10,6 @@ const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
     user: { id: "", name: "" },
   });
 
-  // Effect to update editedTask whenever the task prop changes
   useEffect(() => {
     if (task) {
       setEditedTask(task);
@@ -42,11 +40,9 @@ const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
       }
     } catch (error) {
       console.error(error);
-      // Optionally, handle error (e.g., showing an error message)
     }
   };
 
-  // Find the name of the user for the dropdown initial display
   const initialAssigneeName =
     users.find((user) => user.id === editedTask.user.id)?.name || "Select User";
 

@@ -118,6 +118,7 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
         </form>
       </div>
 
+      {/* Notification Toast */}
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}

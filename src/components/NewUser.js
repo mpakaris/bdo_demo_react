@@ -13,7 +13,6 @@ function NewUser({ onUserAdded }) {
   const [houseNumber, setHouseNumber] = useState("");
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
-  // Add state for validation error messages
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -189,6 +188,8 @@ function NewUser({ onUserAdded }) {
           </div>
         </form>
       </div>
+
+      {/* Notification Toast */}
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}
