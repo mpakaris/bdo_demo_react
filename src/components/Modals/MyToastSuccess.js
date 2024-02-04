@@ -1,6 +1,6 @@
 import React from "react";
 import { Toast } from "react-bootstrap";
-import "../App.css";
+import "../../App.css";
 
 function MyToastSuccess({ show, onClose, children }) {
   return (

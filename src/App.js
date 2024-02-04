@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Diamond from "./assets/diamond.svg";
-import NewTask from "./components/NewTask";
-import NewUser from "./components/NewUser";
-import TaskTable from "./components/TaskTable";
-import UserTable from "./components/UserTable";
+import NewTask from "./components/CreateViews/NewTask";
+import NewUser from "./components/CreateViews/NewUser";
+import TaskTable from "./components/Tables/TaskTable";
+import UserTable from "./components/Tables/UserTable";
 import TaskService from "./services/TaskService";
 import UserService from "./services/UserService";
 

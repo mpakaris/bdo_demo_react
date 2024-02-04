@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import "../App.css";
-import Delete from "../assets/delete.svg";
-import Edit from "../assets/edit.svg";
-import View from "../assets/view.svg";
-import UserService from "../services/UserService";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import EditUserModal from "./EditUserModal";
-import MyToastError from "./MyToastError";
-import MyToastSuccess from "./MyToastSuccess";
-import ViewUserDetails from "./ViewUserDetail";
+import "../../App.css";
+import Delete from "../../assets/delete.svg";
+import Edit from "../../assets/edit.svg";
+import View from "../../assets/view.svg";
+import UserService from "../../services/UserService";
+import DeleteConfirmationModal from "../Modals/DeleteConfirmationModal";
+import EditUserModal from "../EditViews/EditUserModal";
+import MyToastError from "../Modals/MyToastError";
+import MyToastSuccess from "../Modals/MyToastSuccess";
+import ViewUserDetails from "../DetailViews/ViewUserDetail";
 
 function UserTable({ users, onUserEdited, onUserDeleted }) {
   const [show, setShow] = useState(false);

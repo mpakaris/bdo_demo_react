@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Dropdown, Modal } from "react-bootstrap";
-import TaskService from "../services/TaskService";
+import TaskService from "../../services/TaskService";
 
 const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
   const [editedTask, setEditedTask] = useState({

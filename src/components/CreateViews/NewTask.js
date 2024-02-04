@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import TaskService from "../services/TaskService";
-import MyToastError from "./MyToastError";
-import MyToastSuccess from "./MyToastSuccess";
+import TaskService from "../../services/TaskService";
+import MyToastError from "../Modals/MyToastError";
+import MyToastSuccess from "../Modals/MyToastSuccess";
 
-function NewTask({ users, onTaskAdded, setUserMsg }) {
+function NewTask({ users, onTaskAdded }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState("Assign User to Task");

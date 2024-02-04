@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import UserService from "../services/UserService";
-import MyToastError from "./MyToastError";
-import MyToastSuccess from "./MyToastSuccess";
+import UserService from "../../services/UserService";
+import MyToastError from "../Modals/MyToastError";
+import MyToastSuccess from "../Modals/MyToastSuccess";
 
 function NewUser({ onUserAdded }) {
   const [name, setName] = useState("");

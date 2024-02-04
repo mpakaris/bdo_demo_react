@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import "../App.css";
-import Delete from "../assets/delete.svg";
-import Edit from "../assets/edit.svg";
-import View from "../assets/view.svg";
-import TaskService from "../services/TaskService";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import EditTaskModal from "./EditTaskModal";
-import MyToastError from "./MyToastError";
-import MyToastSuccess from "./MyToastSuccess";
-import ViewTaskDetails from "./ViewTaskDetail";
-import taskService from "../services/TaskService";
+import "../../App.css";
+import Delete from "../../assets/delete.svg";
+import Edit from "../../assets/edit.svg";
+import View from "../../assets/view.svg";
+import TaskService from "../../services/TaskService";
+import DeleteConfirmationModal from "../Modals/DeleteConfirmationModal";
+import EditTaskModal from "../EditViews/EditTaskModal";
+import MyToastError from "../Modals/MyToastError";
+import MyToastSuccess from "../Modals/MyToastSuccess";
+import ViewTaskDetails from "../DetailViews/ViewTaskDetail";
+import taskService from "../../services/TaskService";
 
 function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
