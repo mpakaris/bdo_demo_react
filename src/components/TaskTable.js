@@ -118,8 +118,8 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
 
       <ViewTaskDetails
         showViewModal={showViewModal}
-        handleClose={handleCloseViewModal}
-        task={activeTask}
+        handleViewModal={handleCloseViewModal}
+        activeTask={activeTask}
       />
 
       <EditTaskModal
