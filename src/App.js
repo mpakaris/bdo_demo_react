@@ -3,8 +3,8 @@ import "./App.css";
 import Diamond from "./assets/diamond.svg";
 import NewTask from "./components/CreateViews/NewTask";
 import NewUser from "./components/CreateViews/NewUser";
-import TaskTable from "./components/Tables/TaskTable";
-import UserTable from "./components/Tables/UserTable";
+import TaskTable from "./components/TableViews/TaskTable";
+import UserTable from "./components/TableViews/UserTable";
 import TaskService from "./services/TaskService";
 import UserService from "./services/UserService";
 
