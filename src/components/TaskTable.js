@@ -11,41 +11,29 @@ import MyToastSuccess from "./MyToastSuccess";
 import ViewTaskDetails from "./ViewTaskDetail";
 
 function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
-  const [show, setShow] = useState(false);
-  const [activeTask, setActiveTask] = useState(undefined);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [activeTask, setActiveTask] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
 
-  const handleCloseEditModal = () => {
-    setShowEditModal(false);
-    setActiveTask();
-  };
-
   const handleShowEditModal = (id) => {
+    const task = tasks.find((task) => task.id === id);
+    setActiveTask(task);
     setShowEditModal(true);
-    setActiveTask(tasks.find((task) => task.id === id));
   };
 
-  const handleClose = () => {
-    setShow(false);
-    setActiveTask();
+  const handleShowViewModal = (id) => {
+    const task = tasks.find((task) => task.id === id);
+    setActiveTask(task);
+    setShowViewModal(true);
   };
 
-  const handleShow = (id) => {
-    setShow(true);
-    setActiveTask(tasks.find((task) => task.id === id));
-  };
-
-  const handleViewModal = async (id) => {
-    if (!showViewModal) {
-      const res = await TaskService.getTaskById(id);
-      if (res) {
-        setActiveTask(res.data);
-      }
-    }
-    setShowViewModal(!showViewModal);
+  const handleShowDeleteModal = (id) => {
+    const task = tasks.find((task) => task.id === id);
+    setActiveTask(task);
+    setShowDeleteModal(true);
   };
 
   const findAssigneeById = (id) => {
@@ -53,64 +41,19 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
     return assignee ? assignee.name : "User not in DB";
   };
 
+  const handleCloseEditModal = () => setShowEditModal(false);
+  const handleCloseViewModal = () => setShowViewModal(false);
+  const handleCloseDeleteModal = () => setShowDeleteModal(false);
+
   const deleteTask = async () => {
     try {
       const res = await TaskService.deleteTask(activeTask.id);
       if (res.status === 204) {
-        setShow(false);
-        onTaskEdited();
-        onUserEdited();
-        setShowEditModal(false);
+        setShowDeleteModal(false);
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);
-      }
-    } catch (error) {
-      console.log(error);
-      setShowToastError(true);
-      setTimeout(() => setShowToastError(false), 3000);
-    }
-  };
-
-  const handleChange = (e, field) => {
-    if (field === "title") {
-      setActiveTask({
-        ...activeTask,
-        taskTitle: e.target.value,
-      });
-    }
-
-    if (field === "description") {
-      setActiveTask({
-        ...activeTask,
-        taskDescription: e.target.value,
-      });
-    }
-  };
-
-  const handleAssigneeChange = (userName) => {
-    const newAssigneeId = users.find((user) => user.name === userName).id;
-    setActiveTask({
-      ...activeTask,
-      user: { id: newAssigneeId },
-    });
-  };
-
-  const submitEditedTask = async () => {
-    const taskDTO = {
-      id: activeTask.id,
-      taskTitle: activeTask.taskTitle,
-      taskDescription: activeTask.taskDescription,
-      user: { id: activeTask.user.id },
-    };
-
-    try {
-      const res = await TaskService.updateTask(activeTask.id, taskDTO);
-      if (res.data) {
         onTaskEdited();
         onUserEdited();
-        setShowEditModal(false);
-        setShowToastSuccess(true);
-        setTimeout(() => setShowToastSuccess(false), 3000);
       }
     } catch (error) {
       console.log(error);
@@ -150,7 +93,7 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
                 <div className="btn-selection">
                   <button
                     className="btn btn-info"
-                    onClick={() => handleViewModal(task.id)}
+                    onClick={() => handleShowViewModal(task.id)}
                   >
                     <img src={View} alt="View Task" />
                   </button>
@@ -162,7 +105,7 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
                   </button>
                   <button
                     className="btn btn-danger ms-3"
-                    onClick={() => handleShow(task.id)}
+                    onClick={() => handleShowDeleteModal(task.id)}
                   >
                     <img src={Delete} alt="Delete Task" />
                   </button>
@@ -173,46 +116,44 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
         </tbody>
       </table>
 
-      {/* Task View Modal */}
       <ViewTaskDetails
         showViewModal={showViewModal}
-        handleViewModal={handleViewModal}
-        activeTask={activeTask}
+        handleClose={handleCloseViewModal}
+        task={activeTask}
       />
 
-      {/* Notification Toast */}
+      <EditTaskModal
+        show={showEditModal}
+        handleClose={handleCloseEditModal}
+        task={activeTask}
+        users={users}
+        onTaskUpdated={() => {
+          setShowEditModal(false);
+          onTaskEdited();
+          onTaskEdited();
+          onUserEdited();
+        }}
+      />
+
+      <DeleteConfirmationModal
+        show={showDeleteModal}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={deleteTask}
+        task={activeTask}
+      />
+
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}
       >
-        Congrats! Task edited successfully!
+        Action completed successfully!
       </MyToastSuccess>
       <MyToastError
         show={showToastError}
         onClose={() => setShowToastError(false)}
       >
-        Error! Task edit failed!
+        Error! Action failed!
       </MyToastError>
-
-      {/* Edit Task Modal */}
-      {activeTask && (
-        <EditTaskModal
-          show={showEditModal}
-          handleClose={handleCloseEditModal}
-          task={activeTask}
-          users={users}
-          handleChange={handleChange}
-          handleAssigneeChange={handleAssigneeChange}
-          submit={submitEditedTask}
-        />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        show={show}
-        handleClose={handleClose}
-        handleDelete={deleteTask}
-      />
     </div>
   );
 }

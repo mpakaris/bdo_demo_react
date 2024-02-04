@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 function EditUserModal({
@@ -8,6 +8,63 @@ function EditUserModal({
   handleEditChanges,
   submitEditedUser,
 }) {
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    streetName: "",
+    houseNumber: "",
+    city: "",
+    postalCode: "",
+  });
+
+  useEffect(() => {
+    if (!show) {
+      setErrors({
+        name: "",
+        email: "",
+        streetName: "",
+        houseNumber: "",
+        city: "",
+        postalCode: "",
+      });
+    }
+  }, [show]);
+
+  const validateField = (field, value) => {
+    let errMsg = "";
+    switch (field) {
+      case "name":
+        errMsg = value.trim() ? "" : "Name cannot be empty.";
+        break;
+      case "email":
+        errMsg = /\S+@\S+\.\S+/.test(value) ? "" : "Invalid email format.";
+        break;
+      case "streetName":
+        errMsg = value.trim() ? "" : "Street name cannot be empty.";
+        break;
+      case "houseNumber":
+        errMsg = value > 0 ? "" : "House number must be greater than 0.";
+        break;
+      case "city":
+        errMsg = value.trim() ? "" : "City cannot be empty.";
+        break;
+      case "postalCode":
+        errMsg = /^\d{4,5}$/.test(value)
+          ? ""
+          : "Postal code must be 4 or 5 digits.";
+        break;
+      default:
+        break;
+    }
+    setErrors((prevErrors) => ({ ...prevErrors, [field]: errMsg }));
+  };
+
+  const modifiedHandleEditChanges = (e, field) => {
+    const { value } = e.target;
+    validateField(field, value);
+    handleEditChanges(e, field);
+  };
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -20,8 +77,9 @@ function EditUserModal({
               type="text"
               placeholder="Name"
               value={user.name || ""}
-              onChange={(e) => handleEditChanges(e, "name")}
+              onChange={(e) => modifiedHandleEditChanges(e, "name")}
             />
+            {errors.name && <div className="text-danger">{errors.name}</div>}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="userEmail">
@@ -29,8 +87,9 @@ function EditUserModal({
               type="email"
               placeholder="Email"
               value={user.email || ""}
-              onChange={(e) => handleEditChanges(e, "email")}
+              onChange={(e) => modifiedHandleEditChanges(e, "email")}
             />
+            {errors.email && <div className="text-danger">{errors.email}</div>}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="userStreet">
@@ -38,8 +97,11 @@ function EditUserModal({
               type="text"
               placeholder="Street"
               value={user.address.street || ""}
-              onChange={(e) => handleEditChanges(e, "streetName")}
+              onChange={(e) => modifiedHandleEditChanges(e, "streetName")}
             />
+            {errors.streetName && (
+              <div className="text-danger">{errors.streetName}</div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="userHouseNumber">
@@ -47,8 +109,11 @@ function EditUserModal({
               type="number"
               placeholder="House Number"
               value={user.address.houseNumber || ""}
-              onChange={(e) => handleEditChanges(e, "houseNumber")}
+              onChange={(e) => modifiedHandleEditChanges(e, "houseNumber")}
             />
+            {errors.houseNumber && (
+              <div className="text-danger">{errors.houseNumber}</div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="userCity">
@@ -56,17 +121,21 @@ function EditUserModal({
               type="text"
               placeholder="City"
               value={user.address.city || ""}
-              onChange={(e) => handleEditChanges(e, "city")}
+              onChange={(e) => modifiedHandleEditChanges(e, "city")}
             />
+            {errors.city && <div className="text-danger">{errors.city}</div>}
           </Form.Group>
 
-          <Form.Group controlId="userPostalCode">
+          <Form.Group className="mb-3" controlId="userPostalCode">
             <Form.Control
               type="number"
               placeholder="Postal Code"
               value={user.address.postalCode || ""}
-              onChange={(e) => handleEditChanges(e, "postalCode")}
+              onChange={(e) => modifiedHandleEditChanges(e, "postalCode")}
             />
+            {errors.postalCode && (
+              <div className="text-danger">{errors.postalCode}</div>
+            )}
           </Form.Group>
         </Form>
       </Modal.Body>
@@ -74,7 +143,11 @@ function EditUserModal({
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="warning" onClick={submitEditedUser}>
+        <Button
+          variant="warning"
+          onClick={submitEditedUser}
+          disabled={Object.values(errors).some((error) => error !== "")}
+        >
           Update User
         </Button>
       </Modal.Footer>

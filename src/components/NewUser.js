@@ -8,56 +8,87 @@ function NewUser({ onUserAdded }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
-  const [postalCode, setPostalCode] = useState(1000);
+  const [postalCode, setPostalCode] = useState("");
   const [streetName, setStreetName] = useState("");
-  const [houseNumber, setHouseNumber] = useState(1);
+  const [houseNumber, setHouseNumber] = useState("");
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  // Add state for validation error messages
+  const [errors, setErrors] = useState({});
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
+  const validateForm = () => {
+    let formIsValid = true;
+    let errors = {};
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+    if (!name) {
+      errors["name"] = "Name cannot be empty.";
+      formIsValid = false;
+    }
 
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
+    if (!email.match(/\S+@\S+\.\S+/)) {
+      errors["email"] = "Invalid email format.";
+      formIsValid = false;
+    }
 
-  const handlePostalCodeChange = (e) => {
-    setPostalCode(e.target.value);
-  };
+    if (password.length < 8) {
+      errors["password"] = "Password must be at least 8 characters long.";
+      formIsValid = false;
+    }
 
-  const handleStreetNameChange = (e) => {
-    setStreetName(e.target.value);
-  };
+    if (!city) {
+      errors["city"] = "City cannot be empty.";
+      formIsValid = false;
+    }
 
-  const handleHouseNumberChange = (e) => {
-    setHouseNumber(e.target.value);
+    if (!postalCode.match(/^\d{4}$/)) {
+      errors["postalCode"] = "Postal code must be 4 digits.";
+      formIsValid = false;
+    }
+
+    if (!streetName) {
+      errors["streetName"] = "Street name cannot be empty.";
+      formIsValid = false;
+    }
+
+    if (isNaN(houseNumber) || houseNumber <= 0) {
+      errors["houseNumber"] = "House number must be greater than 0.";
+      formIsValid = false;
+    }
+
+    setErrors(errors);
+    return formIsValid;
   };
 
   const formSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      setShowToastError(true);
+      setTimeout(() => setShowToastError(false), 3000);
+      return;
+    }
+
     const userDTO = {
-      name: name,
-      email: email,
+      name,
+      email,
       passwordHash: password,
       address: {
-        city: city,
-        postalCode: postalCode,
+        city,
+        postalCode,
         street: streetName,
-        houseNumber: houseNumber,
+        houseNumber,
       },
     };
 
     try {
       const res = await UserService.createUser(userDTO);
       if (res.status === 201) {
+        setName("");
+        setEmail("");
+        setPassword("");
+        setCity("");
+        setPostalCode("");
+        setStreetName("");
+        setHouseNumber("");
         onUserAdded();
         setShowToastSuccess(true);
         setTimeout(() => setShowToastSuccess(false), 3000);
@@ -78,82 +109,86 @@ function NewUser({ onUserAdded }) {
               type="text"
               className="form-control"
               placeholder="Name"
-              onChange={handleNameChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
+            {errors.name && <div className="text-danger">{errors.name}</div>}
           </div>
           <div className="col-md-6">
             <input
               type="email"
               className="form-control"
-              placeholder="name@email.com"
-              onChange={handleEmailChange}
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <div className="text-danger">{errors.email}</div>}
           </div>
           <div className="col-md-12">
             <input
               type="password"
               className="form-control"
               placeholder="Password"
-              onChange={handlePasswordChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {errors.password && (
+              <div className="text-danger">{errors.password}</div>
+            )}
           </div>
           <div className="col-8">
             <input
               type="text"
               className="form-control"
               placeholder="Street"
-              onChange={handleStreetNameChange}
+              value={streetName}
+              onChange={(e) => setStreetName(e.target.value)}
             />
+            {errors.streetName && (
+              <div className="text-danger">{errors.streetName}</div>
+            )}
           </div>
           <div className="col-4">
             <input
-              min={0}
-              max={100}
               type="number"
               className="form-control"
               placeholder="House"
-              onChange={handleHouseNumberChange}
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
             />
+            {errors.houseNumber && (
+              <div className="text-danger">{errors.houseNumber}</div>
+            )}
           </div>
           <div className="col-md-8">
             <input
               type="text"
               className="form-control"
               placeholder="City"
-              onChange={handleCityChange}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
+            {errors.city && <div className="text-danger">{errors.city}</div>}
           </div>
-
           <div className="col-md-4">
             <input
-              min={1000}
-              max={9999}
               type="number"
               className="form-control"
               placeholder="Zip Code"
-              onChange={handlePostalCodeChange}
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
             />
+            {errors.postalCode && (
+              <div className="text-danger">{errors.postalCode}</div>
+            )}
           </div>
           <div className="col-12">
-            <button
-              type="submit"
-              className="btn btn-warning text-light"
-              disabled={
-                !name ||
-                !email ||
-                !password ||
-                !city ||
-                !streetName ||
-                !postalCode ||
-                !houseNumber
-              }
-            >
+            <button type="submit" className="btn btn-warning text-light">
               Add User
             </button>
           </div>
         </form>
       </div>
-
       <MyToastSuccess
         show={showToastSuccess}
         onClose={() => setShowToastSuccess(false)}
@@ -164,7 +199,7 @@ function NewUser({ onUserAdded }) {
         show={showToastError}
         onClose={() => setShowToastError(false)}
       >
-        Error! Task failed!
+        Error! User addition failed!
       </MyToastError>
     </>
   );
