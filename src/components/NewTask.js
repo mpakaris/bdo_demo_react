@@ -10,13 +10,25 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
   const [assignee, setAssignee] = useState("Assign User to Task");
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  const [titleLimitReached, setTitleLimitReached] = useState(false);
+  const [descriptionLimitReached, setDescriptionLimitReached] = useState(false);
 
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    if (e.target.value.length <= 50) {
+      setTitle(e.target.value);
+      setTitleLimitReached(false);
+    } else {
+      setTitleLimitReached(true);
+    }
   };
 
   const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
+    if (e.target.value.length <= 250) {
+      setDescription(e.target.value);
+      setDescriptionLimitReached(false);
+    } else {
+      setDescriptionLimitReached(true);
+    }
   };
   const handleAssigneeChange = (userName) => {
     setAssignee(userName);
@@ -25,7 +37,6 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
   const formSubmit = async (e) => {
     e.preventDefault();
     const user = users.find((user) => user.name === assignee);
-
     const taskDTO = {
       taskTitle: title,
       taskDescription: description,
@@ -55,7 +66,13 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
               className="form-control"
               placeholder="Task Title"
               onChange={handleTitleChange}
+              value={title}
             />
+            {titleLimitReached && (
+              <small className="text-danger">
+                Max limit of characters reached: 50
+              </small>
+            )}
           </div>
           <div className="col-md-3 mr-0">
             <Dropdown onSelect={handleAssigneeChange}>
@@ -72,14 +89,19 @@ function NewTask({ users, onTaskAdded, setUserMsg }) {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
           <div className="mb-3">
             <textarea
               className="form-control"
               rows="3"
               placeholder="Description of Task"
               onChange={handleDescriptionChange}
+              value={description}
             ></textarea>
+            {descriptionLimitReached && (
+              <small className="text-danger">
+                Max limit of characters reached: 250
+              </small>
+            )}
           </div>
 
           <div className="col-12">
