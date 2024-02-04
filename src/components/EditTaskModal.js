@@ -59,7 +59,7 @@ const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
               className="form-control"
               placeholder="Task Title"
               value={editedTask.taskTitle || ""}
-              onChange={(event) => handleChange(event, "title")}
+              onChange={(event) => handleChange(event, "taskTitle")}
             />
           </div>
           <div className="col-md-3 mr-0">
@@ -82,7 +82,7 @@ const EditTaskModal = ({ show, handleClose, task, users, onTaskUpdated }) => {
               rows="3"
               placeholder="Description of Task"
               value={editedTask.taskDescription || ""}
-              onChange={(event) => handleChange(event, "description")}
+              onChange={(event) => handleChange(event, "taskDescription")}
             ></textarea>
           </div>
         </form>
