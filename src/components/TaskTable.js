@@ -9,6 +9,7 @@ import EditTaskModal from "./EditTaskModal";
 import MyToastError from "./MyToastError";
 import MyToastSuccess from "./MyToastSuccess";
 import ViewTaskDetails from "./ViewTaskDetail";
+import taskService from "../services/TaskService";
 
 function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,10 +25,12 @@ function TaskTable({ tasks, users, onTaskEdited, onUserEdited }) {
     setShowEditModal(true);
   };
 
-  const handleShowViewModal = (id) => {
-    const task = tasks.find((task) => task.id === id);
-    setActiveTask(task);
-    setShowViewModal(true);
+  const handleShowViewModal = async (id) => {
+    const res = await taskService.getTaskById(id);
+    if (res.status === 200) {
+      setActiveTask(res.data)
+      setShowViewModal(true);
+    }
   };
 
   const handleShowDeleteModal = (id) => {
