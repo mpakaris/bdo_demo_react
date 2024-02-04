@@ -37,8 +37,8 @@ function UserTable({ users, onUserEdited, onUserDeleted }) {
 
   const handleViewModal = async (id) => {
     if (!showViewModal) {
-      const res = await UserService.getUserById(id);
-      if (res) {
+      const res = await UserService.getUserById(id);console.log(res)
+      if (res.status === 200) {
         setActiveUser(res.data);
       }
     }
